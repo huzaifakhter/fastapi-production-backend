@@ -1,12 +1,12 @@
 from fastapi import FastAPI, APIRouter
-from app.core.db import write_user, read_user
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.db import get_db
+from app.modules.auth.service import create_user
 
 router = APIRouter()
 
 @router.post("/register")
-async def user_register(username: str):
-    if read_user(username):
-        return {"message": f"{username} already exists."}
-    else:
-        write_user(username)
-        return {"message": f"{username} registered successfully."}
+async def register(email: str, password: str, db: AsyncSession = Depends(get_db)):
+    user = await create_user(db, email, password)
+    return {"id": user.id, "email": user.email}
