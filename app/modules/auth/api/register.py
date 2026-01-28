@@ -1,10 +1,8 @@
-from fastapi import APIRouter, Depends
-from app.modules.auth.service import register_user
+from fastapi import APIRouter, Depends, HTTPException
+from app.modules.auth.service import register_user, UserAlreadyExists
 from app.core.interfaces.user_repository import UserRepository
 from app.core.dependencies import get_user_repo
 from app.modules.auth.schemas import UserCreate
-from app.modules.auth.service import UserAlreadyExists
-from fastapi import HTTPException
 
 router = APIRouter()
 
