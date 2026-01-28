@@ -1,16 +1,24 @@
-from select import select
-from fastapi import FastAPI, APIRouter
 from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.db import get_db
-from app.modules.auth.service import create_user, get_user_by_email
-from app.core.securrity import hash_password
+from app.modules.auth.service import register_user
+from app.core.interfaces.user_repository import UserRepository
+from app.core.dependencies import get_user_repo
 from app.modules.auth.schemas import UserCreate
+from app.modules.auth.service import UserAlreadyExists
+from fastapi import HTTPException
 
 router = APIRouter()
 
-@router.post("/register", status_code=201)
-async def register(payload: UserCreate, db: AsyncSession = Depends(get_db)):
-    hashed = hash_password(payload.password)   # ONLY here
-    await create_user(db, payload.email, hashed)
-    return {"message": "User created"}
+@router.post("/register")
+async def register(
+    payload: UserCreate,
+    repo: UserRepository = Depends(get_user_repo),
+):
+    try:
+        await register_user(payload.email, payload.password, repo)
+        return {"message": "User created"}
+    except UserAlreadyExists:
+        raise HTTPException(status_code=400, detail="User already exists")
+
+
+
+

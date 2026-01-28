@@ -1,22 +1,26 @@
-from pygments.token import Token
 from fastapi import HTTPException
 from fastapi import APIRouter, Depends
-from app.modules.auth.service import get_user_by_email, login_user
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.db import get_db
-from app.modules.auth.schemas import UserOut, UserLogin
+from app.core.interfaces.user_repository import UserRepository
+from app.core.dependencies import get_user_repo
+from app.core.security import create_access_token
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import Depends
+from app.modules.auth.service import authenticate_user
 
 router = APIRouter()
 
-@router.post("/login", response_model=Token)
+@router.post("/login")
 async def login(
-    payload: UserLogin,
-    db: AsyncSession = Depends(get_db)
-    ):
-
-    token = await login_user(db, payload.email, payload.password)
-    if not token:
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    repo: UserRepository = Depends(get_user_repo),
+):
+    user = await authenticate_user(
+        email=form_data.username,
+        password=form_data.password,
+        repo=repo
+    )
+    if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    return token
-
+    token = create_access_token({"sub": user.email})
+    return {"access_token": token, "token_type": "bearer"}
