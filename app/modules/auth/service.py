@@ -7,6 +7,29 @@ from sqlalchemy.orm import session
 from sqlalchemy import select
 from app.modules.auth.schemas import Token
 
+from app.core.interfaces.user_repository import UserRepository
+from app.core.securrity import hash_password
+
+class UserAlreadyExists(Exception):
+    pass
+
+async def register_user(email: str, password: str, repo: UserRepository):
+    if await repo.get_by_email(email):
+        raise UserAlreadyExists()
+
+    return await repo.create(
+        email=email,
+        hashed_password=hash_password(password)
+    )
+
+
+
+
+
+
+
+
+
 async def create_user(
     db: AsyncSession,
     email: str,
