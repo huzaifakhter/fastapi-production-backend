@@ -1,15 +1,18 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.infrastructure.sql.user_repo import SQLUserRepository
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from app.core.db import get_db
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
-from fastapi import Depends, HTTPException
 from app.core.interfaces.user_repository import UserRepository
+from dotenv import load_dotenv
+import os
 
-SECRET_KEY = "secretkey123"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_MINUTES = 15
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_MINUTES = int(os.getenv("ACCESS_TOKEN_MINUTES"))
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 

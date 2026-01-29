@@ -3,12 +3,16 @@ from sqlalchemy.util import deprecated
 from datetime import datetime
 from jose import jwt
 from passlib.context import CryptContext
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
-SECRET_KEY = "secretkey123"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_MINUTES = 15
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_MINUTES = int(os.getenv("ACCESS_TOKEN_MINUTES"))
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)

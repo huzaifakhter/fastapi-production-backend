@@ -1,4 +1,3 @@
-from app.modules.auth.schemas import UserCreate
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
