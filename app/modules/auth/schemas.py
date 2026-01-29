@@ -14,6 +14,7 @@ class UserLogin(BaseModel):
 
 class UserOut(BaseModel):
     id: UUID
+    username: str
     email: EmailStr
     is_active: bool
 
@@ -23,9 +24,4 @@ class UserOut(BaseModel):
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-
-class UserOut(BaseModel):
-    id: UUID
-    email: EmailStr
-    is_active: bool
     

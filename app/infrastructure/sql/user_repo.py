@@ -13,8 +13,8 @@ class SQLUserRepository(UserRepository):
         )
         return result.scalar_one_or_none()
 
-    async def create(self, email: str, hashed_password: str):
-        user = User(email=email, hashed_password=hashed_password)
+    async def create(self, username: str, email: str, hashed_password: str):
+        user = User(username=username, email=email, hashed_password=hashed_password)
         self.db.add(user)
         await self.db.commit()
         await self.db.refresh(user)

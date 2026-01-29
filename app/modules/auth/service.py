@@ -4,15 +4,29 @@ from app.core.security import verify_password
 from app.modules.auth.schemas import Token
 from app.core.interfaces.user_repository import UserRepository
 from app.core.security import hash_password
+import random
 
 class UserAlreadyExists(Exception):
     pass
+def generate_username():
+
+    adjectives = ["brave","bold","true","just","strong","fierce","iron","keen","sure","firm","pure","fast","hard","wise","calm"]
+    nouns = ["hero","knight","king","champ","lord","chief","guard","war","blade","shield","valor","honor","might","force","will"]
+
+    username = (
+        f"{random.choice(adjectives).title()}"
+        f"{random.choice(nouns).title()}"
+        f"{random.randint(0, 100):03d}"
+    )
+    return username
 
 async def register_user(email: str, password: str, repo: UserRepository):
     if await repo.get_by_email(email):
         raise UserAlreadyExists()
 
+    username = generate_username()
     return await repo.create(
+        username=username,
         email=email,
         hashed_password=hash_password(password)
     )
@@ -26,3 +40,4 @@ async def authenticate_user(email: str, password: str, repo: UserRepository):
         return None
 
     return user
+

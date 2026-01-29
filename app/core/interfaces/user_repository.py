@@ -8,5 +8,5 @@ class UserRepository(ABC):
         pass
     
     @abstractmethod
-    async def create(self, email: str, hashed_password: str):
+    async def create(self, username: str, email: str, hashed_password: str):
         pass
