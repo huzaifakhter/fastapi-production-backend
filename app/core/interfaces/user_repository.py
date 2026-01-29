@@ -10,3 +10,7 @@ class UserRepository(ABC):
     @abstractmethod
     async def create(self, username: str, email: str, hashed_password: str):
         pass
+
+    @abstractmethod
+    async def check_username(self, username: str):
+        pass
