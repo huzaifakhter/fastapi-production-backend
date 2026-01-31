@@ -6,6 +6,7 @@ from app.core.interfaces.user_repository import UserRepository
 from app.core.security import hash_password
 import random
 from app.core.dependencies import get_user_repo
+from uuid import UUID
 
 class UserAlreadyExists(Exception):
     pass
@@ -41,6 +42,30 @@ async def register_user(email: str, password: str, repo: UserRepository = Depend
         email=email,
         hashed_password=hash_password(password)
     )
+
+async def update_profile(
+    user_id: UUID,
+    first_name: str,
+    last_name: str, 
+    avatar_url: str,
+    age: int,
+    repo: UserRepository = Depends(get_user_repo)
+    ):
+
+    return await repo.update_profile(
+        user_id=user_id,
+        first_name=first_name,
+        last_name=last_name, 
+        avatar_url=avatar_url,
+        age=age
+    )
+
+async def update_password(user_id: UUID, password: str):
+    return await repo.update_password(
+        user_id=user_id,
+        password=password
+    )
+
 
 async def authenticate_user(email: str, password: str, repo: UserRepository = Depends(get_user_repo)):
     user = await repo.get_by_email(email)

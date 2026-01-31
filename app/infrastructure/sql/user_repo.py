@@ -1,8 +1,10 @@
+from sqlalchemy import Select
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.modules.auth.models import User
 from app.core.interfaces.user_repository import UserRepository
+from uuid import UUID
 
 class SQLUserRepository(UserRepository):
     def __init__(self, db: AsyncSession):
@@ -29,4 +31,79 @@ class SQLUserRepository(UserRepository):
 
         return user
 
+    async def update_profile(
+        self,
+        user_id: UUID,
+        first_name: str | None = None,
+        last_name: str | None = None,
+        avatar_url: str | None = None,
+        age: int | None = None,
+    ):
+        result = await self.db.execute(
+            select(User).where(User.id == user_id)
+        )
+        user = result.scalar_one_or_none()
 
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        if first_name is not None:
+            user.first_name = first_name
+        if last_name is not None:
+            user.last_name = last_name
+        if avatar_url is not None:
+            user.avatar_url = avatar_url
+        if age is not None:
+            user.age = age
+
+        await self.db.commit()
+        await self.db.refresh(user)
+        return user
+
+    async def update_password(
+        self,
+        user_id: UUID,
+        password: str
+    ):
+
+        result = await self.db.execute(
+            select(User).where(User.id == user_id)
+        )
+
+        user = result.scalar_one_or_none()
+
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found.")
+
+        if password is not None:
+            user.password=password
+
+        await self.db.commit()
+        await self.db.refresh(user)
+        return user
+
+
+
+
+    # async def update_profile(self, user_id: UUID, first_name: str | None = None, last_name: str | None = None, avatar_url: str | None = None, age:int | None = None):
+    #     result = await self.db.execute(
+    #         Select(User).where(User.id == user_id)
+    #     )
+
+    #     user = result.scalar_one_or_none()
+
+    #     if not user:
+    #         raise HTTPException(status_code=404, detail="User not found.")
+            
+    #         if first_name is not None:
+    #             user.first_name = first_name
+    #         if last_name is not None:
+    #             user.last_name = last_name
+    #         if avatar_url is not None:
+    #             user.avatar_url = avatar_url
+    #         if age is not None:
+    #             user.age = age
+    #         await self.db.commit()
+    #         await self.db.refresh(user)
+
+    #         return user

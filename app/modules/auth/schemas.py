@@ -48,3 +48,12 @@ class FullProfileOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UpdateProfile(BaseModel):
+    first_name: str
+    last_name: str
+    avatar_url: str
+    age: int
+
+class UpdatePassword(BaseModel):
+    password: str
