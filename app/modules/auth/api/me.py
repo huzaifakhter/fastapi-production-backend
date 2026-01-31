@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.core.dependencies import get_current_user, get_user_repo
 from app.modules.auth.schemas import UserOut, FullProfileOut, UpdateProfile, UpdatePassword
 from app.core.interfaces.user_repository import UserRepository
-from app.modules.auth.service import update_profile
+from app.modules.auth.service import change_password
 router = APIRouter()
 
 @router.get("/me", response_model=UserOut)
@@ -33,7 +33,7 @@ async def update_profile(
     return updated_user
 
 
-@router.patch("/update_password", response_model=FullProfileOut)
+@router.patch("/change_password", response_model=FullProfileOut)
 async def update_password(
     payload: UpdatePassword,
     user=Depends(get_current_user),
@@ -42,9 +42,12 @@ async def update_password(
     if not user:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-    updated_user = await repo.update_password(
+    updated_user = await change_password(
         user_id=user.id,
+        current_password=payload.current_password,
         password=payload.password,
+        repo=repo
     )
 
     return updated_user
+

@@ -56,4 +56,5 @@ class UpdateProfile(BaseModel):
     age: int
 
 class UpdatePassword(BaseModel):
+    current_password: str
     password: str

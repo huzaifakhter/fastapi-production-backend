@@ -15,6 +15,13 @@ class SQLUserRepository(UserRepository):
             select(User).where(User.email == email)
         )
         return result.scalar_one_or_none()
+    
+    async def get_by_id(self, user_id: UUID):
+        result = await self.db.execute(
+            select(User).where(User.id == user_id)
+        )
+        return result.scalar_one_or_none()
+
 
     async def check_username(self, username: str):
         result = await self.db.execute(
@@ -60,10 +67,10 @@ class SQLUserRepository(UserRepository):
         await self.db.refresh(user)
         return user
 
-    async def update_password(
+    async def change_password(
         self,
         user_id: UUID,
-        password: str
+        hashed_password: str
     ):
 
         result = await self.db.execute(
@@ -75,8 +82,7 @@ class SQLUserRepository(UserRepository):
         if not user:
             raise HTTPException(status_code=404, detail="User not found.")
 
-        if password is not None:
-            user.password=password
+        user.hashed_password=hashed_password
 
         await self.db.commit()
         await self.db.refresh(user)

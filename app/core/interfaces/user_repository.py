@@ -1,10 +1,15 @@
 from abc import ABC, abstractmethod
 from typing import Optional
+from uuid import UUID
 
 class UserRepository(ABC):
     
     @abstractmethod
     async def get_by_email(self, email: str):
+        pass
+
+    @abstractmethod
+    async def get_by_id(self, id: UUID):
         pass
     
     @abstractmethod
@@ -20,5 +25,5 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
-    async def update_password(self, password: str):
+    async def change_password(self, password: str):
         pass

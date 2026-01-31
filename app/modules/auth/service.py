@@ -60,10 +60,19 @@ async def update_profile(
         age=age
     )
 
-async def update_password(user_id: UUID, password: str):
-    return await repo.update_password(
+async def change_password(user_id: UUID, current_password: str, password: str, repo: UserRepository):
+    
+    user = await repo.get_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if not verify_password(current_password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid Credentials")
+
+    hashed_password = hash_password(password)
+    return await repo.change_password(
         user_id=user_id,
-        password=password
+        hashed_password=hashed_password
     )
 
 
@@ -72,7 +81,7 @@ async def authenticate_user(email: str, password: str, repo: UserRepository = De
     if not user:
         return None
 
-    if not verify_password(password, user["hashed_password"] if isinstance(user, dict) else user.hashed_password):
+    if not verify_password(password, user.hashed_password):
         return None
 
     return user
