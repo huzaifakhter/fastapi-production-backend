@@ -32,7 +32,6 @@ async def update_profile(
 
     return updated_user
 
-
 @router.patch("/change_password", response_model=FullProfileOut)
 async def update_password(
     payload: UpdatePassword,

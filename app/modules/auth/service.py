@@ -75,7 +75,6 @@ async def change_password(user_id: UUID, current_password: str, password: str, r
         hashed_password=hashed_password
     )
 
-
 async def authenticate_user(email: str, password: str, repo: UserRepository = Depends(get_user_repo)):
     user = await repo.get_by_email(email)
     if not user:
