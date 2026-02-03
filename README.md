@@ -31,16 +31,7 @@ A professional, enterprise-grade FastAPI backend template designed for scalabili
 
 ## 🚀 Getting Started
 
-### Prerequisites
-
-- Python 3.11 or higher
-- [uv](https://github.com/astral-sh/uv) (recommended) or `pip`
-
-### Installation
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/fastapi-production-backend.git
+   git clone https://github.com/huzaifakhter/jksuperapp_backend.git
    cd fastapi-production-backend
    ```
 
@@ -124,4 +115,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-Built with ❤️ by [Antigravity](https://github.com/yourusername)
+Built with ❤️ by [Antigravity](https://github.com/huzaifakhter)
