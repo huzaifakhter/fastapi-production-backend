@@ -114,5 +114,3 @@ Once the server is running, you can access the interactive documentation:
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
-
-Built with ❤️ by [Antigravity](https://github.com/huzaifakhter)
