@@ -31,7 +31,7 @@ A professional, enterprise-grade FastAPI backend template designed for scalabili
 
 ## 🚀 Getting Started
 
-   git clone https://github.com/huzaifakhter/jksuperapp_backend.git
+   git clone https://github.com/huzaifakhter/fastapi-production-backend
    cd fastapi-production-backend
    ```
 
